@@ -1,35 +1,35 @@
 services:
   db:
-    image: postgres:13 
-    environment:
+    image: postgres:13 # version de postgres
+    environment: # variables de entorno
       POSTGRES_DB: mutant_detector
       POSTGRES_USER: vicky
       POSTGRES_PASSWORD: password
     ports:
-      - "5433:5432"  
+      - "5433:5432" # para acceder a postgresql desde fuera del contenedor a traves del puerto
     networks:
       - mutant-network
     volumes:
-      - postgres_data:/var/lib/postgresql/data  
+      - postgres_data:/var/lib/postgresql/data # persistir los datos de la bd dentro del contenedor
 
   api:
-    build: .
-    environment:
+    build: . # construir imagen de docker apartir del archivo de docker en el directorio actual
+    environment: # variables de entorno
       POSTGRES_HOST: db  
       POSTGRES_PORT: 5432  
       POSTGRES_DB: mutant_detector 
       POSTGRES_USER: vicky  
       POSTGRES_PASSWORD: password  
-    depends_on:
+    depends_on: # el servicio db debe estar en funcionamiento antes de correr la API
       - db
     ports:
-      - "8000"
+      - "8000" # puerto donde se ejecuta
     networks:
-      - mutant-network
+      - mutant-network # red a la que esta conectada
 
 networks:
   mutant-network:
-    driver: bridge
+    driver: bridge # driver predeterminado para redes de contenedores en docker
 
-volumes:
-  postgres_data:
+volumes: # definir volumen para persistir los datos
+  postgres_data: 
